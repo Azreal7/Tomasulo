@@ -1,0 +1,368 @@
+cycle 1: 
+entry1 : Yes,LD F2,0,R2,Issue,F2,;
+entry2 : No,,,,;
+entry3 : No,,,,;
+entry4 : No,,,,;
+entry5 : No,,,,;
+entry6 : No,,,,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :Yes,LD,,Mem[Regs[R2]],,,F2;
+Load2 :No,,,,,;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :No,,,,,;
+Reorder:F0: ;F1: ;F2: 1;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: Yes;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 2: 
+entry1 : Yes,LD F2,0,R2,Execute,F2,;
+entry2 : Yes,LD F4,0,R3,Issue,F4,;
+entry3 : No,,,,;
+entry4 : No,,,,;
+entry5 : No,,,,;
+entry6 : No,,,,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :Yes,LD,,Mem[Regs[R2]],,,F2;
+Load2 :Yes,LD,,Mem[Regs[R3]],,,F4;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :No,,,,,;
+Reorder:F0: ;F1: ;F2: 1;F3: ;F4: 2;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: Yes;F3: No;F4: Yes;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 3: 
+entry1 : Yes,LD F2,0,R2,Execute,F2,;
+entry2 : Yes,LD F4,0,R3,Execute,F4,;
+entry3 : Yes,DIVD F0,F4,F2,Issue,F0,;
+entry4 : No,,,,;
+entry5 : No,,,,;
+entry6 : No,,,,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :Yes,LD,,Mem[Regs[R2]],,,F2;
+Load2 :Yes,LD,,Mem[Regs[R3]],,,F4;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,,,2,1,F0;
+Mult2 :No,,,,,;
+Mult3 :No,,,,,;
+Reorder:F0: 3;F1: ;F2: 1;F3: ;F4: 2;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: Yes;F3: No;F4: Yes;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 4: 
+entry1 : Yes,LD F2,0,R2,Write result,F2,Mem[Regs[R2]];
+entry2 : Yes,LD F4,0,R3,Execute,F4,;
+entry3 : Yes,DIVD F0,F4,F2,Issue,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : No,,,,;
+entry6 : No,,,,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :Yes,LD,,Mem[Regs[R2]],,,F2;
+Load2 :Yes,LD,,Mem[Regs[R3]],,,F4;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,,#1,2,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :No,,,,,;
+Reorder:F0: 3;F1: ;F2: 1;F3: ;F4: 2;F5: ;F6: 4;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: Yes;F3: No;F4: Yes;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 5: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : Yes,LD F4,0,R3,Write result,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Issue,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Issue,F0,;
+entry6 : No,,,,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :No,,,,,;
+Load2 :Yes,LD,,Mem[Regs[R3]],,,F4;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :No,,,,,;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: 2;F5: ;F6: 4;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: Yes;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 6: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Execute,F0,;
+entry6 : Yes,SD F6,0,R3,Issue,F6,;
+entry7 : No,,,,;
+entry8 : No,,,,;
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :No,,,,,;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :No,,,,,;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 6;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 7: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Execute,F0,;
+entry6 : Yes,SD F6,0,R3,Execute,F6,;
+entry7 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry8 : No,,,,;
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :No,,,,,;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :Yes,MULTD,,#1,5,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 7;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 8: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Execute,F6,;
+entry7 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry8 : Yes,SD F6,0,R1,Issue,F6,;
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 9-10: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Execute,F6,;
+entry8 : Yes,SD F6,0,R1,Execute,F6,;
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 11-18: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Execute,F6,;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 19-25: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Execute,F0,;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,,#1,3,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 26: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : Yes,DIVD F0,F4,F2,Write result,F0,#2/#1;
+entry4 : Yes,MULTD F6,F0,F2,Issue,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :Yes,DIVD,#2,#1,,,F0;
+Mult2 :Yes,MULTD,#3,#1,,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: 5;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: Yes;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 27-36: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : Yes,MULTD F6,F0,F2,Execute,F6,;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :Yes,MULTD,#3,#1,,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 37: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : Yes,MULTD F6,F0,F2,Write result,F6,#3*#1;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :Yes,MULTD,#3,#1,,,F6;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: 8;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: Yes;F7: No;F8: No;F9: No;F10: No;
+
+cycle 38: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
+entry5 : Yes,ADDD F0,F4,F2,Write result,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :Yes,ADDD,#2,#1,,,F0;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 39: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
+entry5 : No,ADDD F0,F4,F2,Commit,F0,#2+#1;
+entry6 : Yes,SD F6,0,R3,Write result,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :Yes,SD,,Mem[Regs[R3]],,,F6;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 40: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
+entry5 : No,ADDD F0,F4,F2,Commit,F0,#2+#1;
+entry6 : No,SD F6,0,R3,Commit,F6,Mem[Regs[R3]];
+entry7 : No,MULTD F6,F0,F2,Commit,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :No,,,,,;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :No,,,,,;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 41: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
+entry5 : No,ADDD F0,F4,F2,Commit,F0,#2+#1;
+entry6 : No,SD F6,0,R3,Commit,F6,Mem[Regs[R3]];
+entry7 : No,MULTD F6,F0,F2,Commit,F6,#5*#1;
+entry8 : No,SD F6,0,R1,Commit,F6,Mem[Regs[R1]];
+Load1 :No,,,,,;
+Load2 :No,,,,,;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :No,,,,,;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+LD F2,0,R2:1,2,4,5;
+LD F4,0,R3:2,3,5,6;
+DIVD F0,F4,F2:3,6,26,27;
+MULTD F6,F0,F2:4,27,37,38;
+ADDD F0,F4,F2:5,6,8,39;
+SD F6,0,R3:6,7,9,40;
+MULTD F6,F0,F2:7,9,19,40;
+SD F6,0,R1:8,9,11,41;

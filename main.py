@@ -3,8 +3,8 @@ import reservationStation as resS
 import reorderBuffer as rB
 import functions as func
 
-input_file = "input1.txt"
-output_file = "output1.txt"
+input_file = "inputs/input1.txt"
+output_file = "outputs/output1.txt"
 rrs = regRS.RRS()
 rs = resS.RS()
 rb = rB.ReorderBuffer()

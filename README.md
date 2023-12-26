@@ -1,6 +1,8 @@
 # Tomasulo
 中山大学 计算机体系结构课程 Tomasulo算法实现
 
+实现了带有reorderBuffer的Speculative Tomasulo算法。
+
 文件结构：
 
 - functions.py：整理主要输入、输出功能。

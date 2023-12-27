@@ -76,6 +76,7 @@ class station:
                     rb.entrys[self.no].buffer[4] = str(self.buffer[2]) + "*" + str(self.buffer[3])
                 # 状态转为Write Result
                 rb.entrys[self.no].buffer[2] = "Write result"
+                rb.entrys[self.no].check(1, cycle-1) # write result周期-1就是exec执行结束时间
                 rb.entrys[self.no].check(2, cycle)
                 self.time = 1
             # Write Result转结束
@@ -119,7 +120,6 @@ class station:
                     return
                 self.time = time_set[self.buffer[1]]
                 rb.entrys[self.no].buffer[2] = "Execute"
-                rb.entrys[self.no].check(1, cycle)
     
     # 输出寄存器状态
     def show(self):

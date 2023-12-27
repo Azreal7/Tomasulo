@@ -57,7 +57,7 @@ class station:
     # 写更新
     def write_update(self, rss, rb, cycle, lock):
         if self.is_available():
-            return
+            return lock
         if self.time > 0: self.time -= 1
         if self.time == 0:
             # Execute转Write Result
@@ -81,13 +81,13 @@ class station:
                 self.time = 1
             # Write Result转结束
             elif rb.entrys[self.no].buffer[2] == "Write result":
-                # 判断更新锁状态
-                if lock == 1:
-                    return
                 # 判断顺序提交
                 if self.no != 0:
                     if rb.entrys[self.no-1].buffer[2] != "Commit":
-                        return
+                        return lock
+                # 判断更新锁状态
+                if lock == 1:
+                    return lock
                 rb.entrys[self.no].buffer[2] = "Commit"
                 rb.entrys[self.no].buffer[0] = 0
                 self.buffer[0] = 0
@@ -184,14 +184,14 @@ class RS:
 
     # 下个周期更新倒计时
     def update(self, rrs, rb, cycle):
-        self.lock = self.Load2.write_update(rrs, rb, cycle, self.lock)
-        self.lock = self.Mult3.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Load1.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Load2.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Add1.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Add2.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Add3.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Mult1.write_update(rrs, rb, cycle, self.lock)
         self.lock = self.Mult2.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Mult3.write_update(rrs, rb, cycle, self.lock)
         self.Load1.read_update(rb, cycle)
         self.Load2.read_update(rb, cycle)
         self.Add1.read_update(rb, cycle)

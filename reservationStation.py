@@ -55,7 +55,7 @@ class station:
             self.buffer[5] = rrs.status[input[3]]
 
     # 写更新
-    def write_update(self, rss, rb, cycle):
+    def write_update(self, rss, rb, cycle, lock):
         if self.is_available():
             return
         if self.time > 0: self.time -= 1
@@ -81,6 +81,9 @@ class station:
                 self.time = 1
             # Write Result转结束
             elif rb.entrys[self.no].buffer[2] == "Write result":
+                # 判断更新锁状态
+                if lock == 1:
+                    return
                 # 判断顺序提交
                 if self.no != 0:
                     if rb.entrys[self.no-1].buffer[2] != "Commit":
@@ -92,6 +95,8 @@ class station:
                 rss.value[str(self.buffer[6])] = "#" + str(self.no + 1)
                 rss.busy[str(self.buffer[6])] = 0
                 rb.entrys[self.no].check(3, cycle)
+                lock = 1
+        return lock # 返回更新锁状态
 
     # 读更新
     def read_update(self, rb, cycle):
@@ -145,6 +150,7 @@ class RS:
         self.Mult1 = station()
         self.Mult2 = station()
         self.Mult3 = station()
+        self.lock = 0 # 更新锁，防止多个station同时从write result更新为commit
 
     # 插入，成功返回1，失败返回0
     def insert(self, input, rrs, no, rb):
@@ -178,14 +184,14 @@ class RS:
 
     # 下个周期更新倒计时
     def update(self, rrs, rb, cycle):
-        self.Load1.write_update(rrs, rb, cycle)
-        self.Load2.write_update(rrs, rb, cycle)
-        self.Add1.write_update(rrs, rb, cycle)
-        self.Add2.write_update(rrs, rb, cycle)
-        self.Add3.write_update(rrs, rb, cycle)
-        self.Mult1.write_update(rrs, rb, cycle)
-        self.Mult2.write_update(rrs, rb, cycle)
-        self.Mult3.write_update(rrs, rb, cycle)
+        self.lock = self.Load2.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Mult3.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Load1.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Add1.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Add2.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Add3.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Mult1.write_update(rrs, rb, cycle, self.lock)
+        self.lock = self.Mult2.write_update(rrs, rb, cycle, self.lock)
         self.Load1.read_update(rb, cycle)
         self.Load2.read_update(rb, cycle)
         self.Add1.read_update(rb, cycle)
@@ -194,6 +200,7 @@ class RS:
         self.Mult1.read_update(rb, cycle)
         self.Mult2.read_update(rb, cycle)
         self.Mult3.read_update(rb, cycle)
+        self.lock = 0
 
     # 打印保留站信息       
     def show(self):

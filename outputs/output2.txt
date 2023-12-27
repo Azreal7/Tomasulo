@@ -325,6 +325,26 @@ entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
 entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
 entry5 : No,ADDD F0,F4,F2,Commit,F0,#2+#1;
 entry6 : No,SD F6,0,R3,Commit,F6,Mem[Regs[R3]];
+entry7 : Yes,MULTD F6,F0,F2,Write result,F6,#5*#1;
+entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
+Load1 :No,,,,,;
+Load2 :Yes,SD,,Mem[Regs[R1]],,,F6;
+Add1 :No,,,,,;
+Add2 :No,,,,,;
+Add3 :No,,,,,;
+Mult1 :No,,,,,;
+Mult2 :No,,,,,;
+Mult3 :Yes,MULTD,#5,#1,,,F6;
+Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
+Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
+
+cycle 41: 
+entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
+entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
+entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
+entry4 : No,MULTD F6,F0,F2,Commit,F6,#3*#1;
+entry5 : No,ADDD F0,F4,F2,Commit,F0,#2+#1;
+entry6 : No,SD F6,0,R3,Commit,F6,Mem[Regs[R3]];
 entry7 : No,MULTD F6,F0,F2,Commit,F6,#5*#1;
 entry8 : Yes,SD F6,0,R1,Write result,F6,Mem[Regs[R1]];
 Load1 :No,,,,,;
@@ -338,7 +358,7 @@ Mult3 :No,,,,,;
 Reorder:F0: ;F1: ;F2: ;F3: ;F4: ;F5: ;F6: ;F7: ;F8: ;F9: ;F10: ;
 Busy:F0: No;F1: No;F2: No;F3: No;F4: No;F5: No;F6: No;F7: No;F8: No;F9: No;F10: No;
 
-cycle 41: 
+cycle 42: 
 entry1 : No,LD F2,0,R2,Commit,F2,Mem[Regs[R2]];
 entry2 : No,LD F4,0,R3,Commit,F4,Mem[Regs[R3]];
 entry3 : No,DIVD F0,F4,F2,Commit,F0,#2/#1;
@@ -364,5 +384,5 @@ DIVD F0,F4,F2:3,25,26,27;
 MULTD F6,F0,F2:4,36,37,38;
 ADDD F0,F4,F2:5,7,8,39;
 SD F6,0,R3:6,8,9,40;
-MULTD F6,F0,F2:7,18,19,40;
-SD F6,0,R1:8,10,11,41;
+MULTD F6,F0,F2:7,18,19,41;
+SD F6,0,R1:8,10,11,42;

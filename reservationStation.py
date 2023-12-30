@@ -16,6 +16,7 @@ class station:
         self.buffer = ['' for _ in range(7)]
         self.buffer[0] = 0
         self.time = 0
+        self.no = -1
 
     def is_available(self):
         return self.buffer[0] == 0
@@ -57,7 +58,8 @@ class station:
     # 写更新
     def write_update(self, rss, rb, cycle, lock):
         if self.is_available():
-            return lock
+            if self.no != -1 and rb.entrys[self.no].buffer[2] != "Write result":
+                return lock
         if self.time > 0: self.time -= 1
         if self.time == 0:
             # Execute转Write Result
@@ -79,6 +81,7 @@ class station:
                 rb.entrys[self.no].check(1, cycle-1) # write result周期-1就是exec执行结束时间
                 rb.entrys[self.no].check(2, cycle)
                 self.time = 1
+                self.buffer[0] = 0
             # Write Result转结束
             elif rb.entrys[self.no].buffer[2] == "Write result":
                 # 判断顺序提交
@@ -90,7 +93,6 @@ class station:
                     return lock
                 rb.entrys[self.no].buffer[2] = "Commit"
                 rb.entrys[self.no].buffer[0] = 0
-                self.buffer[0] = 0
                 rss.status[str(self.buffer[6])] = 0
                 rss.value[str(self.buffer[6])] = "#" + str(self.no + 1)
                 rss.busy[str(self.buffer[6])] = 0
